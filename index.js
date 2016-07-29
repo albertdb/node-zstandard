@@ -9,7 +9,6 @@ function compress(inputFile, outputFile, compLevel, callback){
   for (var i=0; i<arguments.length; i++) {
       args.push(arguments[i]);
   }
-  console.log(args);
   inputFile=path.resolve(args.shift());
   outputFile=path.resolve(args.shift());
   callback=args.pop();
