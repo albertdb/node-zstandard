@@ -166,7 +166,7 @@ function decompressionStreamFromFile(inputFile, callback){
   });
 }
 
-function decompressFileToStream(inputFile, writableStream, callback){
+function decompressFileToStream(inputFile, writableStream, force, callback){
   inputFile=path.resolve(inputFile);
   var eventEmitter = new events.EventEmitter();
   fs.access(inputFile, fs.R_OK, (err) => {
@@ -179,7 +179,9 @@ function decompressFileToStream(inputFile, writableStream, callback){
         if(callback) callback(new Error('Zstd binary is not executable.'));
         return;
       }
-      var proc=cp.spawn(zstdBinPath, ['-d', inputFile, '-c']);
+      var options=['-d', inputFile, '-c']
+      if(force) options.unshift('-f');
+      var proc=cp.spawn(zstdBinPath, options);
       proc.stdout.pipe(writableStream);
       proc.on('exit', (code, signal) => {
         if(code==39) eventEmitter.emit('error', new Error('Not in zstd format'));
