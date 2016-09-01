@@ -166,7 +166,7 @@ function decompressionStreamFromFile(inputFile, callback){
   });
 }
 
-function decompressFileToStream(inputFile, writableStream, force, callback){
+function decompressFileToStream(inputFile, writableStream, callback){
   inputFile=path.resolve(inputFile);
   var eventEmitter = new events.EventEmitter();
   fs.access(inputFile, fs.R_OK, (err) => {
@@ -180,7 +180,6 @@ function decompressFileToStream(inputFile, writableStream, force, callback){
         return;
       }
       var options=['-d', inputFile, '-c']
-      if(force) options.unshift('-f');
       var proc=cp.spawn(zstdBinPath, options);
       proc.stdout.pipe(writableStream);
       proc.on('exit', (code, signal) => {

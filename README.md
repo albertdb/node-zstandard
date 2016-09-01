@@ -71,17 +71,16 @@ zstd.decompress('./test.zst','./test', (err, result) => {
 });
 ```
 
-#### decompressFileToStream (inputFile, writableStream, force, callback)
+#### decompressFileToStream (inputFile, writableStream, callback)
 
 * `inputFile`: Path to the to compressed input file.
 * `writableStream`: Node.js Stream where to output decompressed data.
-* `force`: When `true` direct copies original file to output stream if input file is not in Zstd format, instead of emitting error event.
 * `callback`: Function to be executed on task initialization. Follows Node.js `(err, result)` pattern, being `result` an EventEmitter that can emit the following events:
   * `error`: Emitted when an error involving streams or file decompression occurred. Error message is provided.
   * `finish`: Emitted when task finished successfully.
 
 ```
-zstd.decompressFileToStream ('./test', aWritableStream, false, (err, result) => {
+zstd.decompressFileToStream ('./test', aWritableStream, (err, result) => {
   if (err)
     throw err;
   result.on('error', (err) => {
