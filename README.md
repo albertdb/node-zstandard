@@ -1,13 +1,16 @@
 # node-zstandard
 Node.js interface to Zstandard (zstd)
 
-Includes Zstd 0.7.4 version for Linux (x86-64, glibc >=2.19) and Zstd 0.7.3 version for Windows.
+Includes Zstd 1.0.0 version for Linux (x86-64, glibc >=2.19) and Zstd 0.8.1 version for Windows (32 and 64 bits).
 
 ## Interface
 
 `var zstd = require ('node-zstandard')`
 
-### zstd.compress (inputFile, outputFile [, compLevel], callback)
+### Compression
+
+#### zstd.compress (inputFile, outputFile [, compLevel], callback)
+#### zstd.compressFileToFile (inputFile, outputFile [, compLevel], callback)
 
 * `inputFile`: Path to the to file to be compressed.
 * `outputFile`: Path to store the resulting compressed file. 
@@ -17,14 +20,42 @@ Includes Zstd 0.7.4 version for Linux (x86-64, glibc >=2.19) and Zstd 0.7.3 vers
 NOTE: Input and output files should be different. Output file is overwritten if it exists.
 
 ```
-zstd.compress('./test','./test.zst', 3, (err, value) => {
+zstd.compress('./test', './test.zst', 3, (err, result) => {
   if (err)
     throw err;
-  console.log (value);
+  console.log (result);
 });
 ```
 
-### zstd.decompress (inputFile, outputFile, callback)
+#### compressStreamToFile (readableStream, outputFile [, compLevel], callback)
+
+* `readableStream`: Data Node.js Stream to be compressed.
+* `outputFile`: Path to store the resulting compressed file. 
+* `compLevel`: Compression level (default=3).
+* `callback`: Function to be executed on task initialization. Follows Node.js `(err, result)` pattern, being `result` an EventEmitter that can emit the following events:
+  * `error`: Emitted when an error reading the stream or creating the compressed file occurred. Error message is provided.
+  * `end`: Emitted when task ended successfully.
+
+NOTE: Output file is overwritten if it exists.
+
+```
+zstd.compressStreamToFile(aReadableStream, './test.zst', 3, (err, result) => {
+  if (err)
+    throw err;
+  result.on('error', (err) => {
+    throw err;
+  }
+  result.on('end', () => {
+    console.log ('Compression ended');
+  }
+  console.log ('Compression started');
+});
+```
+
+### Decompression
+
+#### zstd.decompress (inputFile, outputFile, callback)
+#### zstd.decompressFileToFile (inputFile, outputFile, callback)
 
 * `inputFile`: Path to the to compressed input file.
 * `outputFile`: Path to store the resulting decompressed file. 
@@ -33,11 +64,60 @@ zstd.compress('./test','./test.zst', 3, (err, value) => {
 NOTE: Input and output files should be different. Output file is overwritten if it exists.
 
 ```
-zstd.decompress('./test.zst','./test', (err, value) => {
+zstd.decompress('./test.zst','./test', (err, result) => {
   if (err)
     throw err;
-  console.log (value);
+  console.log (result);
 });
 ```
+
+#### decompressFileToStream (inputFile, writableStream, force, callback)
+
+* `inputFile`: Path to the to compressed input file.
+* `writableStream`: Node.js Stream where to output decompressed data.
+* `force`: When `true` direct copies original file to output stream if input file is not in Zstd format, instead of emitting error event.
+* `callback`: Function to be executed on task initialization. Follows Node.js `(err, result)` pattern, being `result` an EventEmitter that can emit the following events:
+  * `error`: Emitted when an error involving streams or file decompression occurred. Error message is provided.
+  * `finish`: Emitted when task finished successfully.
+
+```
+zstd.decompressFileToStream ('./test', aWritableStream, false, (err, result) => {
+  if (err)
+    throw err;
+  result.on('error', (err) => {
+    throw err;
+  }
+  result.on('finish', () => {
+    console.log ('Decompression finished');
+  }
+  console.log ('Decompression started');
+});
+```
+
+#### decompressionStreamFromFile (inputFile, callback)
+
+* `inputFile`: Path to the to compressed input file.
+* `callback`: Function to be executed on task initialization. Follows Node.js `(err, result)` pattern, being `result` an EventEmitter that can emit the following events:
+  * `error`: Emitted when an error involving streams or file decompression occurred. Error message is provided.
+  * `data`: Emitted when a chunk of decompressed data is generated. Data is obviously provided.
+  * `end`: Emitted when decompression ended and all data events have been emitted.
+
+```
+zstd.decompressionStreamFromFile ('./test', (err, result) => {
+  if (err)
+    throw err;
+  var decompressedData = '';
+  result.on('error', (err) => {
+    throw err;
+  }
+  result.on('data', (data) => {
+    decompressedData += data;
+  }
+  result.on('end', () => {
+    console.log (decompressedData);
+  }
+});
+```
+
 ## License
 Apache 2.0
