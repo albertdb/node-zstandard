@@ -1,7 +1,7 @@
 # node-zstandard
 Node.js interface to Zstandard (zstd)
 
-Includes Zstd 1.0.0 version for Linux (x86-64, glibc >=2.19) and Zstd 0.8.1 version for Windows (32 and 64 bits).
+Includes Zstd 1.0.0 version for Linux (x86-64, glibc >=2.19) and Windows (32 and 64 bits).
 
 ## Interface
 
@@ -77,7 +77,7 @@ zstd.decompress('./test.zst','./test', (err, result) => {
 * `writableStream`: Node.js Stream where to output decompressed data.
 * `callback`: Function to be executed on task initialization. Follows Node.js `(err, result)` pattern, being `result` an EventEmitter that can emit the following events:
   * `error`: Emitted when an error involving streams or file decompression occurred. Error message is provided.
-  * `finish`: Emitted when task finished successfully.
+  * `finish`: Emitted when finished writting decompressed data to output stream.
 
 ```
 zstd.decompressFileToStream ('./test', aWritableStream, (err, result) => {
