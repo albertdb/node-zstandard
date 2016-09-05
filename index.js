@@ -2,7 +2,7 @@ var cp=require('child_process');
 var fs=require('fs');
 var path=require('path');
 var events=require('events');
-var zstdBin=(process.platform === 'win32')?((process.arch === 'x64')?'zstd64.exe':'zstd32.exe'):'zstd.linux64';
+var zstdBin=(process.platform === 'win32')?((process.arch === 'x64')?'zstd64.exe':'zstd32.exe'):((process.platform === 'darwin')?'zstd.darwin':'zstd.linux64');
 var zstdBinPath=path.resolve(__dirname, 'bin', zstdBin);
 
 function compress(inputFile, outputFile, compLevel, callback){
