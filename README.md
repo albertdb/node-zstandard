@@ -15,7 +15,7 @@ Includes Zstd 1.0.0 version for Linux (x86-64, glibc >=2.19), Windows (32 and 64
 * `inputFile`: Path to the to file to be compressed.
 * `outputFile`: Path to store the resulting compressed file. 
 * `compLevel`: Compression level (default=3).
-* `callback`: Function to be executed on task completion. Follows Node.js `(err, result)` pattern, being `result` equal to `outputFile` when succedded.
+* `callback`: Function to be executed on task completion. Follows Node.js `(err, result)` pattern, being `result` equal to `outputFile` when succeeded.
 
 NOTE: Input and output files should be different. Output file is overwritten if it exists.
 
@@ -59,7 +59,7 @@ zstd.compressStreamToFile(aReadableStream, './test.zst', 3, (err, result) => {
 
 * `inputFile`: Path to the to compressed input file.
 * `outputFile`: Path to store the resulting decompressed file. 
-* `callback`: Function to be executed on task completion. Follows Node.js `(err, result)` pattern, being `result` equal to `outputFile` when succedded.
+* `callback`: Function to be executed on task completion. Follows Node.js `(err, result)` pattern, being `result` equal to `outputFile` when succeeded.
 
 NOTE: Input and output files should be different. Output file is overwritten if it exists.
 
