@@ -74,7 +74,7 @@ function compressStreamToFile(readableStream, outputFile, compLevel, callback){
         if(callback) callback(new Error('Zstd binary is not executable.'));
         return;
       }
-      var proc=cp.spawn(zstdBinPath, ['-f', '-o', outputFile]);
+      var proc=cp.spawn(zstdBinPath, ['-f','-'+compLevel, '-o', outputFile]);
       readableStream.pipe(proc.stdin);
       readableStream.on('error', (err) => {
         proc.kill();
