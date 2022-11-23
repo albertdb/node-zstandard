@@ -5,7 +5,8 @@
   "main": "index.js",
   "types": "./types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/albertdb/node-zstandard#readme",
   "devDependencies": {
     "@types/node": "^18.11.9",
+    "jsdoc": "^4.0.0",
     "typescript": "^4.9.3"
   },
   "files": [
